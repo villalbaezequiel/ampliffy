@@ -48,6 +48,9 @@ RUN echo "deb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/so
 RUN apt-get update
 RUN apt-get install -y nginx
 
+ADD images/nginx/default /etc/nginx/sites-enabled/
+ADD images/nginx/nginx.conf /etc/nginx/
+
 # Composer & Laravel/Lumen configuration
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
