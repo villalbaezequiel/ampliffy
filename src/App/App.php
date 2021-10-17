@@ -8,4 +8,6 @@ $app = AppFactory::create();
 
 require __DIR__ . '/../App/Routes.php';
 
+$app->addErrorMiddleware(true, true, true);
+
 $app->run();
