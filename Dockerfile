@@ -48,6 +48,10 @@ RUN echo "deb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/so
 RUN apt-get update
 RUN apt-get install -y nginx
 
+# Composer & Laravel/Lumen configuration
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Supervisor Process Manager
 # Install supervisor
 RUN apt-get install -y supervisor
