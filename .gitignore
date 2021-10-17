@@ -1,0 +1,7 @@
+.idea/
+.vscode/
+/src/vendor/
+/src/node_modules/
+/src/coverage/
+/src//logs/*
+.phpunit.result.cache
