@@ -12,11 +12,13 @@
           "App\\Controllers\\": "Controllers/",
           "App\\Models\\": "Models/",
           "App\\Helpers\\": "Helpers/",
-          "App\\Services\\": "Services/"
+          "App\\Services\\": "Services/",
+          "App\\Commands\\": "Commands/"
       }
     },
     "scripts": {
         "start": "php -S localhost:8080 -t public public/index.php",
-        "install-hooks": "cp Hooks/* ../.git/hooks && chmod -R +x ../.git/hooks/"
+        "install-hooks": "cp Hooks/* ../.git/hooks && chmod -R +x ../.git/hooks/",
+        "commands": "php bin/console.php"
     }
 }
