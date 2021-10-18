@@ -1,4 +1,4 @@
-# Ampliffy Chanllenge 
+# Ampliffy Challenge 
 
 ### Slim, Micro-Framework
 
@@ -23,7 +23,7 @@
 
 - Get Repositories: http://ampliffy.challenge.es/api/v1/repositories
 - Get Branches: http://ampliffy.challenge.es/api/v1/branches/{id_repository}
-- Get Commits: localhost:8080/api/v1/commits/{id_branch}
+- Get Commits: http://ampliffy.challenge.es/api/v1/commits/{id_branch}
 
 ### Command:
 
