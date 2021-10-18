@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Checking GIT CHANGE..."
+
+hash=`git log -1 | grep commit`
+hashParse=`php -r "echo str_replace('commit', '', '$hash');"`
+branch=`git branch --contains $hashParse`
+author=`git log -1 | grep Author`
+date=`git log -1 | grep Date`
+
+# execute command
+command="$(composer commands git:pre-commit ampliffy https://github.com/villalbaezequiel/ampliffy.git $branch $hashParse description-hash $author $date)"
