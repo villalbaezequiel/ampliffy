@@ -13,16 +13,46 @@ class GitController extends BaseController
     
     public function getRepositories(Request $request, Response $response, array $arg)
     {
-        return Repository::all()->toJson();
+        try {
+            $data = Repository::all()->toJson();
+
+            $response->getBody()->write($data);
+
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201); 
+
+        } catch (\Exception $err) {
+            // priority one Slim Application Error, catch this
+            return 'ERROR('.$err->getLine().'): '.$err->getMessage();;
+        }
     }
 
-    public function getBranchs(Request $request, Response $response, array $arg)
+    public function getBranches(Request $request, Response $response, array $arg)
     {
-        return Branch::all()->toJson();
+        try {
+            $data = Branch::where('id_repository', $arg['id_repository'])->get()->toJson();
+
+            $response->getBody()->write($data);
+
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201); 
+
+        } catch (\Exception $err) {
+            // priority one Slim Application Error, catch this
+            return 'ERROR('.$err->getLine().'): '.$err->getMessage();;
+        }
     }
 
     public function getCommits(Request $request, Response $response, array $arg)
     {
-        return Commit::all()->toJson();
+        try {
+            $data = Commit::where('id_branch', $arg['id_branch'])->get()->toJson();
+
+            $response->getBody()->write($data);
+
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201); 
+
+        } catch (\Exception $err) {
+            // priority one Slim Application Error, catch this
+            return 'ERROR('.$err->getLine().'): '.$err->getMessage();;
+        }
     }
 }
