@@ -17,7 +17,6 @@
       }
     },
     "scripts": {
-        "start": "php -S localhost:8080 -t public public/index.php",
         "install-hooks": "cp Hooks/* ../.git/hooks && chmod -R +x ../.git/hooks/",
         "commands": "php bin/console.php"
     }
