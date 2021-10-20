@@ -2,12 +2,15 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Commands\PreCommitCommand;
+use App\Commands\CommitMsgCommand;
+use App\Commands\PostCommitCommand;
 use Symfony\Component\Console\Application;
 
-$command = new PreCommitCommand();
+$commitMsgCommand = new CommitMsgCommand();
+$postCommitCommand = new PostCommitCommand();
 
 $application = new Application();
-$application->add($command);
+$application->add($commitMsgCommand);
+$application->add($postCommitCommand);
 
 $application->run();

@@ -3,6 +3,8 @@ CREATE TABLE `repositories` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `remote_url` varchar(255) NOT NULL DEFAULT '',
   `is_home` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -10,6 +12,8 @@ CREATE TABLE `branches` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_repository` int(11) NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT '',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -19,6 +23,9 @@ CREATE TABLE `commits` (
   `hash` varchar(255) NOT NULL DEFAULT '',
   `description` varchar(500) NOT NULL DEFAULT '',
   `author` varchar(255) NOT NULL DEFAULT '',
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `date` timestamp NOT NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

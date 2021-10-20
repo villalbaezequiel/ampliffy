@@ -1,0 +1,22 @@
+#!/bin/sh
+
+commit_hash=$(git log -1 --pretty=format:"%H")
+commit_date=$(git log -1 --pretty=format:"%ci")
+
+#verify commit
+if [ -z "${commit_hash}" ];
+then
+
+   echo "There was an error"
+   exit 1
+
+else
+
+   # path origin
+   PROJECT=`php -r "echo dirname(dirname(dirname(realpath('$0'))));"`
+   cd ${PROJECT}
+
+   # execute command -> docker, save data tracking commit
+   docker-compose exec -T app composer commands git:post-commit "${commit_hash}" "${commit_date}"
+
+fi

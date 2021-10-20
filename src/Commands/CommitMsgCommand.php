@@ -10,27 +10,26 @@ use App\Models\Repository;
 use App\Models\Branch;
 use App\Models\Commit;
 
-class PreCommitCommand extends Command
+class CommitMsgCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('git:pre-commit');
-        $this->setDescription('Observe and Save the changes pre-commit.');
+        $this->setName('git:commit-msg');
+        $this->setDescription('Observe and Save the changes commit-msg.');
 
         $this
-            ->addArgument('repository', InputArgument::REQUIRED, '')
-            ->addArgument('repository-origin', InputArgument::REQUIRED, '')
-            ->addArgument('branch', InputArgument::REQUIRED, '')
-            ->addArgument('hash-commit', InputArgument::REQUIRED, '')
-            ->addArgument('description-commit', InputArgument::REQUIRED, '')
-            ->addArgument('author-commit', InputArgument::REQUIRED, '')
-            ->addArgument('date-commit', InputArgument::REQUIRED, '');
+        ->addArgument('repository', InputArgument::REQUIRED, '')
+        ->addArgument('repository-origin', InputArgument::REQUIRED, '')
+        ->addArgument('branch', InputArgument::REQUIRED, '')
+        ->addArgument('description-commit', InputArgument::REQUIRED, '')
+        ->addArgument('author-commit', InputArgument::REQUIRED, '')
+        ->addArgument('email-commit', InputArgument::REQUIRED, '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->writeLn("Observing and Saving changes pre-commit...");
+            $output->writeLn("Observing and Saving changes commit-msg...");
 
             // validate isset Repo
             $checkRepository = Repository::where('name', $input->getArgument('repository'))
@@ -61,15 +60,17 @@ class PreCommitCommand extends Command
             // new Commit
             $commit = new Commit;
             $commit->id_branch = $branch->id;
-            $commit->hash = $input->getArgument('hash-commit');
+            // $commit->hash = $input->getArgument('hash-commit');
             $commit->description = $input->getArgument('description-commit');
             $commit->author = $input->getArgument('author-commit');
-            $commit->date = $input->getArgument('date-commit');
+            $commit->email = $input->getArgument('email-commit');
+            // $commit->date = $input->getArgument('date-commit');
             $commit->save();
-
+            
             return Command::SUCCESS;
         } catch (\Exception $err) {
             var_dump($err);
+            return Command::FAILURE;
         }
     }
 }
