@@ -25,10 +25,12 @@ class PostCommitCommand extends Command
         try {
             $output->writeLn("Observing and Saving changes post-commit...");
 
+            $parseDate = explode(" ", $input->getArgument('date-commit'));
+
             // update last Commit
             $commit = Commit::orderBy('id', 'DESC')->first();
             $commit->hash = $input->getArgument('hash-commit');
-            $commit->date = $input->getArgument('date-commit');
+            $commit->date = "$parseDate[0] $parseDate[1]";
             $commit->save();
             
             return Command::SUCCESS;
