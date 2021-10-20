@@ -41,25 +41,29 @@ class CommitMsgCommand extends Command
                 $repository = new Repository;
                 $repository->name = $input->getArgument('repository');
                 $repository->remote_url = $input->getArgument('repository-origin');
+                $repository->is_home = 1;
                 $repository->save();
             }
 
             // validate isset Repo with relation Branch
+            $idRepository = ($checkRepository ? $checkRepository->id : $repository->id);
             $checkBranch = Branch::where('name', $input->getArgument('branch'))
-                                ->where('id_repository', '!=', $repository->id)
+                                ->where('id_repository', $idRepository)
                                 ->first();
 
             if (!$checkBranch) {
                 // new Branch
                 $branch = new Branch;
                 $branch->name = $input->getArgument('branch');
-                $branch->id_repository = $repository->id;
+                $branch->id_repository = $idRepository;
                 $branch->save();
             }
 
+            $idBranch = ($checkBranch ? $checkBranch->id : $branch->id);
+
             // new Commit
             $commit = new Commit;
-            $commit->id_branch = $branch->id;
+            $commit->id_branch = $idBranch;
             // $commit->hash = $input->getArgument('hash-commit');
             $commit->description = $input->getArgument('description-commit');
             $commit->author = $input->getArgument('author-commit');
