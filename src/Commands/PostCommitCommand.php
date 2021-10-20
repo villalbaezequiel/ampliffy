@@ -23,15 +23,18 @@ class PostCommitCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->writeLn("Observing and Saving changes post-commit...");
+            $output->writeLn("Observing asdand Saving changes post-commit...");
 
             $parseDate = explode(" ", $input->getArgument('date-commit'));
 
             // update last Commit
-            $commit = Commit::orderBy('id', 'DESC')->first();
-            $commit->hash = $input->getArgument('hash-commit');
-            $commit->date = "$parseDate[0] $parseDate[1]";
-            $commit->save();
+            $commit = Commit::orderBy('id', 'DESC')->where('hash', '')->first();
+
+            if ($commit) {
+                $commit->hash = $input->getArgument('hash-commit');
+                $commit->date = "$parseDate[0] $parseDate[1]";
+                $commit->save();
+            }
             
             return Command::SUCCESS;
         } catch (\Exception $err) {

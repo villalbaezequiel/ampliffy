@@ -12,6 +12,8 @@ use App\Models\Commit;
 
 class CommitMsgCommand extends Command
 {
+    const HOME_NAME_REPO = "villalbaezequiel";
+
     protected function configure()
     {
         $this->setName('git:commit-msg');
@@ -37,11 +39,14 @@ class CommitMsgCommand extends Command
                                         ->first();
 
             if (!$checkRepository) {
+
+                $isHome = strpos($input->getArgument('repository-origin'), self::HOME_NAME_REPO);
+
                 // new Repository
                 $repository = new Repository;
                 $repository->name = $input->getArgument('repository');
                 $repository->remote_url = $input->getArgument('repository-origin');
-                $repository->is_home = 1;
+                $repository->is_home = ($isHome > 0);
                 $repository->save();
             }
 
