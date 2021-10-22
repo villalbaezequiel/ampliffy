@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Cuando se agregue un git submodule, se debe instalar los hooks logicos,
+# hacia el module git instanciado, segun corresponda.
+
+cp Hooks/* ../.git/modules/Project-1/hooks && chmod -R +x ../.git/modules/Project-1/hooks
+cp Hooks/* ../.git/modules/Project-1/modules/Library-2/hooks && chmod -R +x ../.git/modules/Project-1/modules/Library-2/hooks
+cp Hooks/* ../.git/modules/Project-1/modules/Library-2/modules/Library-4/hooks && chmod -R +x ../.git/modules/Project-1/modules/Library-2/modules/Library-4/hooks
+cp Hooks/* ../.git/modules/Project-1/modules/Library-2/modules/Library-4/modules/Library-1/hooks && chmod -R +x ../.git/modules/Project-1/modules/Library-2/modules/Library-4/modules/Library-1/hooks
+cp Hooks/* ../.git/modules/Project-2/hooks && chmod -R +x ../.git/modules/Project-2/hooks
+cp Hooks/* ../.git/modules/Project-2/modules/Library-2/hooks && chmod -R +x ../.git/modules/Project-2/modules/Library-2/hooks
+cp Hooks/* ../.git/modules/Project-2/modules/Library-2/modules/Library-4/hooks && chmod -R +x ../.git/modules/Project-2/modules/Library-2/modules/Library-4/hooks
+cp Hooks/* ../.git/modules/Project-2/modules/Library-2/modules/Library-4/modules/Library-1/hooks && chmod -R +x ../.git/modules/Project-2/modules/Library-2/modules/Library-4/modules/Library-1/hooks
