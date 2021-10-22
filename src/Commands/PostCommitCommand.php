@@ -6,6 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use App\Helpers\Helpers;
 use App\Models\Commit;
 
 class PostCommitCommand extends Command
@@ -36,7 +37,14 @@ class PostCommitCommand extends Command
                 $commit->save();
             }
             
+            $output->writeLn("This Commit");
+            Helpers::print_x([
+                'id-commit' => $commit->id,
+                'hash-commit' => $commit->hash
+            ]);
+
             return Command::SUCCESS;
+
         } catch (\Exception $err) {
             var_dump($err);
             return Command::FAILURE;

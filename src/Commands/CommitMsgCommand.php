@@ -6,6 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use App\Helpers\Helpers;
 use App\Models\Repository;
 use App\Models\Branch;
 use App\Models\Commit;
@@ -39,11 +40,18 @@ class CommitMsgCommand extends Command
             $checkRepository= Repository::where('name', $input->getArgument('repository'))
                                         ->where('remote_url', $input->getArgument('repository-origin'))
                                         ->first();
+            // validate parent Repo
             $getParent      = [];
             if(!empty($input->getArgument('parent'))) {
                 $idParent   = Repository::where('path', $input->getArgument('parent'))->first();
                 array_push($getParent, $idParent->id); 
+            } else {
+                $issetPath = explode("/".$input->getArgument('repository'), $input->getArgument('path'));
+                $idParent   = Repository::where('path', $issetPath[0])->first();
+                array_push($getParent, $idParent->id);
             }
+
+            $listParentsRepo = $getParent;
 
             if (!$checkRepository) {
                 $isHome = strpos($input->getArgument('repository-origin'), self::HOME_NAME_REPO);
@@ -57,15 +65,16 @@ class CommitMsgCommand extends Command
                 $repository->is_home = ($isHome > 0);
                 $repository->save();
             } else {
-                $thisParents = json_decode($checkRepository->parent);
-
+                $thisParents= json_decode($checkRepository->parent);
                 if(isset($idParent) && !in_array($idParent->id, $thisParents)) array_push($thisParents, $idParent->id);
 
                 $checkRepository->parent = json_encode($thisParents);
                 $checkRepository->save();
+
+                $listParentsRepo = $thisParents;
             }
 
-            // validate isset Repo with relation Branch
+            // validate isset Branch with relation Repo 
             $idRepository = ($checkRepository ? $checkRepository->id : $repository->id);
             $checkBranch = Branch::where('name', $input->getArgument('branch'))
                                 ->where('id_repository', $idRepository)
@@ -84,17 +93,56 @@ class CommitMsgCommand extends Command
             // new Commit
             $commit = new Commit;
             $commit->id_branch = $idBranch;
-            // $commit->hash = $input->getArgument('hash-commit');
             $commit->description = $input->getArgument('description-commit');
             $commit->author = $input->getArgument('author-commit');
             $commit->email = $input->getArgument('email-commit');
-            // $commit->date = $input->getArgument('date-commit');
             $commit->save();
-            
+
+            $output->writeLn("Tree of Repositories affected. Sub-Project with Parent-Project");
+
+            Helpers::print_x($this->outputTreeRepo($listParentsRepo));
+
             return Command::SUCCESS;
+
         } catch (\Exception $err) {
             var_dump($err);
             return Command::FAILURE;
+        }
+    }
+
+    public function outputTreeRepo($childrens)
+    {
+        try {
+            // set level
+            $treeRepos = [];
+            foreach ($childrens as $children)
+            {
+                $dataRepo = $this->getRepository($children);
+
+                if(!empty(json_decode($dataRepo->parent)))
+                {
+                    foreach (json_decode($dataRepo->parent) as $key => $parent)
+                    {
+                        $treeRepos[$dataRepo->name][$parent] = $this->getRepository($parent)->name;
+                    }
+                } else {
+                    $treeRepos[$dataRepo->id] = $dataRepo->name;
+                }
+            }
+
+            return $treeRepos;
+
+        } catch (\Exception $err) {
+            var_dump($err);
+        }
+    }
+
+    public function getRepository($id)
+    {
+        try {
+            return Repository::find($id);
+        } catch (\Exception $err) {
+            var_dump($err);
         }
     }
 }
