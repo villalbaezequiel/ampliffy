@@ -22,6 +22,8 @@ class CommitMsgCommand extends Command
         $this
         ->addArgument('repository', InputArgument::REQUIRED, '')
         ->addArgument('repository-origin', InputArgument::REQUIRED, '')
+        ->addArgument('path', InputArgument::REQUIRED, '')
+        ->addArgument('parent', InputArgument::REQUIRED, '')
         ->addArgument('branch', InputArgument::REQUIRED, '')
         ->addArgument('description-commit', InputArgument::REQUIRED, '')
         ->addArgument('author-commit', InputArgument::REQUIRED, '')
@@ -34,20 +36,33 @@ class CommitMsgCommand extends Command
             $output->writeLn("Observing and Saving changes commit-msg...");
 
             // validate isset Repo
-            $checkRepository = Repository::where('name', $input->getArgument('repository'))
+            $checkRepository= Repository::where('name', $input->getArgument('repository'))
                                         ->where('remote_url', $input->getArgument('repository-origin'))
                                         ->first();
+            $getParent      = [];
+            if(!empty($input->getArgument('parent'))) {
+                $idParent   = Repository::where('path', $input->getArgument('parent'))->first();
+                array_push($getParent, $idParent->id); 
+            }
 
             if (!$checkRepository) {
-
                 $isHome = strpos($input->getArgument('repository-origin'), self::HOME_NAME_REPO);
 
                 // new Repository
                 $repository = new Repository;
                 $repository->name = $input->getArgument('repository');
                 $repository->remote_url = $input->getArgument('repository-origin');
+                $repository->path = $input->getArgument('path');
+                $repository->parent = json_encode($getParent);
                 $repository->is_home = ($isHome > 0);
                 $repository->save();
+            } else {
+                $thisParents = json_decode($checkRepository->parent);
+
+                if(isset($idParent) && !in_array($idParent->id, $thisParents)) array_push($thisParents, $idParent->id);
+
+                $checkRepository->parent = json_encode($thisParents);
+                $checkRepository->save();
             }
 
             // validate isset Repo with relation Branch

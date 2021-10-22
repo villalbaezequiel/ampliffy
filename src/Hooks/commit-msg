@@ -18,6 +18,8 @@ else
    # Retrieve information it while committing
    REMOTE_ORIGIN_URL=$(git remote get-url origin)
    REMOTE_ORIGIN_NAME=`basename ${REMOTE_ORIGIN_URL}`
+   REMOTE_PATH=$(git rev-parse --show-toplevel)
+   REMOTE_PARENT=$(git rev-parse --show-superproject-working-tree)
    BRANCH_NAME=`git branch | awk '/\*/ { print $2; }'`
    AUTHORINFO=$(git var GIT_AUTHOR_IDENT) || exit 1
    NAME=$(printf '%s\n\n' "${AUTHORINFO}" | sed -n 's/^\(.*\) <.*$/\1/p')
@@ -28,6 +30,6 @@ else
    cd ${PROJECT}
 
    # execute command -> docker, save data tracking commit
-   docker-compose exec -T app composer commands git:commit-msg "${REMOTE_ORIGIN_NAME}" "${REMOTE_ORIGIN_URL}" "${BRANCH_NAME}" "${START_LINE}" "${NAME}" "${EMAIL}"
+   docker-compose exec -T app composer commands git:commit-msg "${REMOTE_ORIGIN_NAME}" "${REMOTE_ORIGIN_URL}" "${REMOTE_PATH}" "${REMOTE_PARENT}" "${BRANCH_NAME}" "${START_LINE}" "${NAME}" "${EMAIL}"
 
 fi
